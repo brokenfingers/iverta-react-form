@@ -2,13 +2,19 @@ import React, { useState } from 'react'
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 import classes from './AddUser.module.css'
+import { User } from './UserList';
 
-const AddUser = () => {
+interface Props {
+    onAddUser: (obj: User) => void
+}
+
+const AddUser = (props: Props) => {
 
     const [userName, setUserName] = useState('')
     const [userAge, setUserAge] = useState('')
 
     const userNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // eslint-disable-next-line
         setUserName(e.target.value)
     }
     const userAgeChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +30,7 @@ const AddUser = () => {
         event.preventDefault()
         if (inputsAreEmpty(userName, userAge)) return
         if (ageIsInvalid(userAge)) return
-        console.log(userAge, userName)
+        props.onAddUser({ name: userName, age: userAge })
         resetField()
     }
 
