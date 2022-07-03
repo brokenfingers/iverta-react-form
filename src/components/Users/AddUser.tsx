@@ -14,7 +14,6 @@ const AddUser = (props: Props) => {
     const [userAge, setUserAge] = useState('')
 
     const userNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // eslint-disable-next-line
         setUserName(e.target.value)
     }
     const userAgeChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
