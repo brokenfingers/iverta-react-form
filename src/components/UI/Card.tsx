@@ -1,7 +1,7 @@
 import classes from './Card.module.css'
 
 interface Props {
-    children: JSX.Element;
+    children: React.ReactNode;
     className: string
 }
 
