@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 import ErrorModal, { ErrorProps } from '../UI/ErrorModal';
@@ -11,40 +11,31 @@ interface Props {
 
 const AddUser = (props: Props) => {
 
-    const [userName, setUserName] = useState('')
-    const [userAge, setUserAge] = useState('')
+    const userNameInput = useRef<HTMLInputElement>(null);
+    const userAgeInput = useRef<HTMLInputElement>(null);
+
     const [error, setError] = useState({} as ErrorProps)
 
-    const userNameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserName(e.target.value)
-    }
-    const userAgeChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserAge(e.target.value)
-    }
-
-    const resetField = () => {
-        setUserName('')
-        setUserAge('')
+    const resetFields = () => {
+        if(userNameInput.current !== null && userAgeInput.current !== null) {
+            userNameInput.current.value = ''
+            userAgeInput.current.value = ''
+        }
     }
 
     const addUserHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        if (inputsAreEmpty(userName, userAge)) return
-        if (ageIsInvalid(userAge)) return
-        props.onAddUser({ name: userName, age: userAge })
-        resetField()
-    }
-
-    const inputsAreEmpty = (...inputs: string[]) => {
-        const isEmpty = inputs.some(itm => itm.trim().length === 0);
-        if (isEmpty) setError({ title: 'Invalid input', message: 'please enter a valid name' })
-        return isEmpty
-    }
-
-    const ageIsInvalid = (age: string) => {
-        const invalidAge = Number(age) < 1
-        if (invalidAge) setError({ title: 'Invalid age', message: 'please enter a valid age' })
-        return invalidAge
+        if(userNameInput.current !== null && userAgeInput.current !== null && userNameInput.current.value.trim().length=== 0 && userAgeInput.current.value.trim().length=== 0) {
+            setError({ title: 'Invalid input', message: 'please enter a valid name' })
+            return
+        }
+            if(userAgeInput.current !== null &&  Number(userAgeInput.current.value) < 1) {
+            setError({ title: 'Invalid age', message: 'please enter a valid age' })
+            return
+        }
+        
+        props.onAddUser({ name: 'stt', age: 'stt' })
+        resetFields()
     }
 
     const errorHandler = () => {
@@ -56,9 +47,9 @@ const AddUser = (props: Props) => {
         <Card className={classes.input}>
             <form onSubmit={addUserHandler}>
                 <label htmlFor='username'>Username</label>
-                <input id='username' type='text' onChange={userNameChangeHandler} value={userName} />
+                <input id='username' type='text'  ref={userNameInput }  />
                 <label htmlFor='age'>Age(years)</label>
-                <input id='age' type='number' onChange={userAgeChangeHandler} value={userAge} />
+                <input id='age' type='number'  ref={userAgeInput}  />
                 <Button type='submit'>Add user</Button>
             </form>
 
