@@ -1,17 +1,22 @@
 import Button from "./Button"
 import Card from "./Card"
 import classes from './ErrorModal.module.css'
+import ReactDom from 'react-dom'
 
-export interface ErrorProps {
+export interface ErrorProps extends BackdropInterface  {
     title: string;
     message: string
+}
+
+interface BackdropInterface {
     onConfirm?: () => void;
 }
-const ErrorModal = (props: ErrorProps) => {
+const Backdrop = (props: BackdropInterface) => {
+    return <div className={classes.backdrop} onClick={props.onConfirm}></div>
+}
 
-    return <>
-        <div className={classes.backdrop} onClick={props.onConfirm}></div>
-        <Card className={classes.modal}>
+const ModalOverlay = (props: ErrorProps) => {
+return  <Card className={classes.modal}>
             <header>
                 <h2 className={classes.header}>
                     {
@@ -30,7 +35,14 @@ const ErrorModal = (props: ErrorProps) => {
                 </footer>
             </header>
         </Card>
-    </>
+}
+
+const ErrorModal = (props: ErrorProps) => {
+
+    return <>
+                {ReactDom.createPortal(<Backdrop onConfirm={props.onConfirm}/>, document.getElementById('backdrop-root') as HTMLElement)}
+                {ReactDom.createPortal(<ModalOverlay title={props.title} message={props.message} onConfirm={props.onConfirm}/>, document.getElementById('overlay-root') as HTMLElement)}
+            </>
 }
 
 export default ErrorModal
